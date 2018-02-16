@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Home Page</title>
+</head>
+<body>
+<div style="display: flex; flex-direction: column; align-items: center" >
+    <h1>LOGIN</h1>
+    <a href="/login">Login</a>
+    <a href="/signup">Sign Up</a>
+    <form method="POST">
+        {{ fmt.Sprint(session.Values["username"]) }}
+        <label for="username">Username:</label>
+        <input id="username" name="username" value="">
+        <label for="pass1">Password:</label>
+        <input type="password" id="pass1" name="pass" value="">
+        <label for="pass1">Password:</label>
+        <input type="password" id="pass2" name="pass" value="">
+        <input type="submit">
+    </form>
+</div>
+</body>
+</html>
+
