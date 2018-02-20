@@ -7,6 +7,7 @@ import (
 
 	//"github.com/gorilla/mux"
 	"github.com/gorilla/context"
+	"fmt"
 )
 
 const(
@@ -14,6 +15,7 @@ const(
 )
 
 func main() {
+	fmt.Println("Server starting, point your browser to localhost:8080 to start")
 	// Here we are instantiating the gorilla/mux router
 	//r := mux.NewRouter()
 
@@ -21,6 +23,7 @@ func main() {
 	http.HandleFunc("/", models.StartPage)
 	http.HandleFunc("/signup", models.SignUpUser)
 	http.HandleFunc("/login", models.LoginUser)
+	http.HandleFunc("/dashboard", models.Dashboard)
 	http.HandleFunc("/logout", models.LogoutUser)
 
 	// Our application will run on port 3030. Here we declare the port and pass in our router.

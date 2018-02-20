@@ -3,7 +3,6 @@ package db
 import (
 	"log"
 	"fmt"
-
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 )
@@ -27,6 +26,23 @@ func init() {
 	fmt.Println("Woow")
 }
 
+
 func CollectionUsers() *mgo.Collection {
 	return db.C("usersdb")
 }
+
+func CreateUser(user User) error {
+	return CollectionUsers().Insert(user)
+}
+func FindUser(username string, password string) (*User,error){
+	res := User{}
+	err := CollectionUsers().Find(bson.M{
+		"username":username,
+		"password": password,
+		}).One(&res)
+		if err != nil{
+			return nil, err
+		}
+		return &res,nil
+}
+
