@@ -1,7 +1,9 @@
 package tmpl
 
 import(
-	"html/template"фф
+	"html/template"
+	)
+
 const StartPage = `<!DOCTYPE html>
 	<html>
 		<head>
