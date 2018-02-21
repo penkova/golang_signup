@@ -1,16 +1,16 @@
 package db
 
 import (
-	"log"
 	"fmt"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
+	"log"
 )
 
-type User struct{
-	Id   bson.ObjectId `json:"id" bson:"_id"`
-	Username string `json:"username" bson:"username"`
-	Password string `json:"password" bson:"password"`
+type User struct {
+	Id       bson.ObjectId `json:"id" bson:"_id"`
+	Username string        `json:"username" bson:"username"`
+	Password string        `json:"password" bson:"password"`
 }
 
 var db *mgo.Database
@@ -26,7 +26,6 @@ func init() {
 	fmt.Println("Woow")
 }
 
-
 func CollectionUsers() *mgo.Collection {
 	return db.C("usersdb")
 }
@@ -34,15 +33,14 @@ func CollectionUsers() *mgo.Collection {
 func CreateUser(user User) error {
 	return CollectionUsers().Insert(user)
 }
-func FindUser(username string, password string) (*User,error){
+func FindUser(username string, password string) (*User, error) {
 	res := User{}
 	err := CollectionUsers().Find(bson.M{
-		"username":username,
+		"username": username,
 		"password": password,
-		}).One(&res)
-		if err != nil{
-			return nil, err
-		}
-		return &res,nil
+	}).One(&res)
+	if err != nil {
+		return nil, err
+	}
+	return &res, nil
 }
-
