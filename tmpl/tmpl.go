@@ -1,8 +1,8 @@
 package tmpl
 
-import(
+import (
 	"html/template"
-	)
+)
 
 const StartPage = `<!DOCTYPE html>
 	<html>
@@ -12,7 +12,7 @@ const StartPage = `<!DOCTYPE html>
 		<body>
 			<div style="display: flex; flex-direction: column; align-items: center" >
 		{{if .CheckSession}}	
-			<p style="color:blue ; text-transform: uppercase">you are already authenticated. Go to your profile <a href="/dashboard">profile!</a></p>
+			<p style="color:blue ; text-transform: uppercase">you are already authenticated. Go to your <a href="/dashboard">profile!</a></p>
 		{{else}}
 				<div style="display: flex; flex-direction: column; align-items: center" >
 				<h1>LOGIN</h1>
@@ -45,8 +45,6 @@ const SingUpPage = `<!DOCTYPE html>
 						
 					<label for="pass1">Password:</label>
 					<input type="password" id="pass1" name="password" value="">
-
-
 					<input type="submit" name="signup" value="Sign In!">
   				{{end}}
 			</form>
@@ -54,15 +52,14 @@ const SingUpPage = `<!DOCTYPE html>
 	</body>
 	</html>`
 
-
-
-
 const LoginPage = `<!DOCTYPE html>
 	<html>
 		<body>
 			<div style="display: flex; flex-direction: column; align-items: center" >
 			<h1>LOGIN</h1>
-  {{if .LoginError}}	<p style="color:red ; text-transform: uppercase">Either username or password is not in our record! Sign Up?</p>{{end}}
+	{{if .LoginError}} 		<p style="color:red ; text-transform: uppercase">Either username or password is not in our record! <a href="/signup">Sign Up?</a></p> {{end}}
+	{{if .UserNotDatabase}} <p style="color:blue ; text-transform: uppercase">user with such username and password does not exist! <a href="/signup">Sign Up?</a></p> {{end}}
+
   			<form method="POST" action="/login">
 				  {{if .Username}}
 					<p><b>{{.Username}}</b>, you're already logged in! <a href="/logout">Logout!</a></p>
@@ -87,15 +84,21 @@ const DashboardPage = `<!DOCTYPE html>
 		<title>My profile</title>
 	</head>
 	<body>
+	{{if .UserNotDatabase}} <p style="color:blue ; text-transform: uppercase">user with such username and password does not exist! Sign Up?</p> {{else}}
+
 	<div style="display: flex; flex-direction: column; align-items: center" >
+{{if .Logout}}
+	
+{{else}}
 		<p style="color:#2F4F4F; text-transform: uppercase">User:{{.username}}</p>
 		<form method="post" action="/logout">
 			<button type="submit">Logout</button>
 		</form>
+{{end}}
 	</div>
+{{end}}
 	</body>
 	</html>`
-
 
 var StartPageTemplate = template.Must(template.New("").Parse(StartPage))
 var SignUpTemplate = template.Must(template.New("").Parse(SingUpPage))
