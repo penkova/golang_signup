@@ -39,10 +39,10 @@ func StartPage(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 	conditionsMap["username"] = session.Values["username"]
-	if session != nil && conditionsMap["username"] == nil {
-		conditionsMap["CheckSession"] = true
-	} else {
+	if session != nil && conditionsMap["username"] == "" {
 		conditionsMap["CheckSession"] = false
+	} else if conditionsMap["username"] != ""{
+		conditionsMap["CheckSession"] = true
 	}
 
 	if err := tmpl.StartPageTemplate.Execute(w, conditionsMap); err != nil {
