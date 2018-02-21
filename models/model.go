@@ -33,15 +33,16 @@ func StartPage(w http.ResponseWriter, req *http.Request) {
 	conditionsMap := map[string]interface{}{}
 	session, err := store.Get(req, "session")
 	fmt.Println(session)
+
 	if err != nil {
 		handleError(err, "Unable to retrieve session data!: %v", w)
 		return
 	}
 	conditionsMap["username"] = session.Values["username"]
 	if session != nil && conditionsMap["username"] == nil {
-		conditionsMap["CheckSession"] = false
-	} else {
 		conditionsMap["CheckSession"] = true
+	} else {
+		conditionsMap["CheckSession"] = false
 	}
 
 	if err := tmpl.StartPageTemplate.Execute(w, conditionsMap); err != nil {
