@@ -6,11 +6,11 @@ import (
 	"github.com/user/golang_signup/models"
 
 	//"github.com/gorilla/mux"
-	"github.com/gorilla/context"
 	"fmt"
+	"github.com/gorilla/context"
 )
 
-const(
+const (
 	port = ":8080"
 )
 
@@ -29,14 +29,3 @@ func main() {
 	// Our application will run on port 3030. Here we declare the port and pass in our router.
 	http.ListenAndServe(port, context.ClearHandler(http.DefaultServeMux))
 }
-
-
-
-
-
-
-
-
-
-
-

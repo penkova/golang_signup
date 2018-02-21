@@ -33,6 +33,7 @@ func CollectionUsers() *mgo.Collection {
 func CreateUser(user User) error {
 	return CollectionUsers().Insert(user)
 }
+
 func FindUser(username string, password string) (*User, error) {
 	res := User{}
 	err := CollectionUsers().Find(bson.M{
