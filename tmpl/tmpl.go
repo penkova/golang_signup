@@ -33,7 +33,7 @@ const SingUpPage = `<!DOCTYPE html>
 		<div style="display: flex; flex-direction: column; align-items: center" >
 			<h1>SIGN IN</h1>
 			{{if .SignUpError}}	<p style="color:red ; text-transform: uppercase">No username or password! Fill in required fields </p>{{end}}
-
+			{{if .ErrorCheckUser}}	<p style="color:red ; text-decoration: underline; text-transform: uppercase">Username and password can only contain letters AND numbers</p>{{end}}
 			<form method="POST" action="/signup">
 
 				{{if .SignUpSuccessful}}

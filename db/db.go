@@ -7,6 +7,7 @@ import (
 	"log"
 )
 
+// User represents database entity.
 type User struct {
 	Id       bson.ObjectId `json:"id" bson:"_id"`
 	Username string        `json:"username" bson:"username"`
@@ -15,6 +16,7 @@ type User struct {
 
 var db *mgo.Database
 
+// Establish a connection to MongoDB database.
 func init() {
 	session, err := mgo.Dial("localhost:27018")
 
@@ -26,14 +28,17 @@ func init() {
 	fmt.Println("Woow")
 }
 
+// Connection to usersdb collections
 func CollectionUsers() *mgo.Collection {
 	return db.C("usersdb")
 }
 
+// Create User
 func CreateUser(user User) error {
 	return CollectionUsers().Insert(user)
 }
 
+// Finding user by username and password
 func FindUser(username string, password string) (*User, error) {
 	res := User{}
 	err := CollectionUsers().Find(bson.M{

@@ -29,6 +29,7 @@ func handleError(err error, message string, w http.ResponseWriter) {
 	w.Write([]byte(fmt.Sprintf(message, err)))
 }
 
+// Start page
 func StartPage(w http.ResponseWriter, req *http.Request) {
 	conditionsMap := map[string]interface{}{}
 	session, err := store.Get(req, "session")
@@ -39,10 +40,22 @@ func StartPage(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 	conditionsMap["username"] = session.Values["username"]
-	if session != nil && conditionsMap["username"] == "" {
+	if session != nil && conditionsMap["username"] == nil {
+		fmt.Println("nil")
+		if session.Values["username"] == "" {
+			conditionsMap["CheckSession"] = false
+		} else {
+			conditionsMap["CheckSession"] = true
+		}
 		conditionsMap["CheckSession"] = false
-	} else if conditionsMap["username"] != ""{
+	} else if conditionsMap["username"] != nil {
+		fmt.Println("no nil")
 		conditionsMap["CheckSession"] = true
+		if session.Values["username"] == "" {
+			conditionsMap["CheckSession"] = false
+		} else {
+			conditionsMap["CheckSession"] = true
+		}
 	}
 
 	if err := tmpl.StartPageTemplate.Execute(w, conditionsMap); err != nil {
@@ -50,19 +63,18 @@ func StartPage(w http.ResponseWriter, req *http.Request) {
 	}
 }
 
+// User page
 func Dashboard(w http.ResponseWriter, req *http.Request) {
 	conditionsMap := map[string]interface{}{}
 	session, _ := store.Get(req, "session")
-
+	// check if session is active. If session is inative - redirect to start page
 	if session != nil {
 		conditionsMap["username"] = session.Values["username"]
-		fmt.Println("conditionsMap -> username -> ", conditionsMap["username"])
 		if conditionsMap["username"] == nil {
 			http.Redirect(w, req, "/", http.StatusFound)
 		}
 	}
 
-	log.Println(session)
 	err := tmpl.DashboardTemplate.Execute(w, conditionsMap)
 	if err != nil {
 		log.Println(err)
@@ -70,6 +82,7 @@ func Dashboard(w http.ResponseWriter, req *http.Request) {
 
 }
 
+// Authentication user
 func LoginUser(w http.ResponseWriter, req *http.Request) {
 	conditionsMap := map[string]interface{}{}
 
@@ -79,18 +92,20 @@ func LoginUser(w http.ResponseWriter, req *http.Request) {
 		conditionsMap["username"] = session.Values["username"]
 		conditionsMap["password"] = session.Values["password"]
 	}
-
+	// Obtaining values
 	username := req.FormValue("username")
 	password := req.FormValue("password")
 	login := req.FormValue("login")
 
 	log.Println("Login in:", username)
 	log.Println("Login password:", password)
-
+	// If you click on "let me in!"
 	if login != "" {
+		// If you do not fill one of the fields
 		if username == "" || password == "" {
 			conditionsMap["LoginError"] = true
 		} else {
+			// Check for this user in the database
 			if _, err := db.FindUser(username, password); err != nil {
 				fmt.Println("Error. Not USER")
 				conditionsMap["UserNotDatabase"] = true
@@ -118,10 +133,10 @@ func LoginUser(w http.ResponseWriter, req *http.Request) {
 	}
 }
 
+// Logout user. Remove user. Session => nil
 func LogoutUser(w http.ResponseWriter, req *http.Request) {
 	// Read from session
 	session, _ := store.Get(req, "session")
-
 	// Remove the username
 	session.Values["username"] = ""
 	err := session.Save(req, w)
@@ -129,10 +144,11 @@ func LogoutUser(w http.ResponseWriter, req *http.Request) {
 	if err != nil {
 		log.Println(err)
 	}
-
+	// Redirect to start page
 	http.Redirect(w, req, "/", http.StatusFound)
 }
 
+// User registration
 func SignUpUser(w http.ResponseWriter, req *http.Request) {
 	conditionsMap := map[string]interface{}{}
 
@@ -142,49 +158,51 @@ func SignUpUser(w http.ResponseWriter, req *http.Request) {
 		conditionsMap["username"] = session.Values["username"]
 		conditionsMap["password"] = session.Values["password"]
 	}
-
+	// Obtaining values
 	username := req.FormValue("username")
 	password := req.FormValue("password")
 	signup := req.FormValue("signup")
-
+	// If you click on "sign up"
 	if signup != "" {
+		// If you do not fill one of the fields
 		if username == "" || password == "" {
 			conditionsMap["SignUpError"] = true
 		} else {
 			conditionsMap["SignUpError"] = false
 
-			//ДОПИСАТЬ ПРОВЕРКУ НА КОРРЕКТНОСТЬ ВВОДА ДАННЫХ
-			if err := checkUsername(username); err != true {
-
-			}
-			if err := checkPassword(password); err != true {
-
-			}
-
-			var user db.User
-			user.Id = bson.NewObjectId()
-			user.Username = username
-			user.Password = password
-
-			if err := db.CreateUser(user); err != nil {
-				fmt.Println("Error with insert")
-				conditionsMap["SignUpSuccessful"] = false
-				return
+			// Check for correctness of data entry
+			checkName := checkUsername(username)
+			checkPass := checkPassword(password)
+			if checkName != true || checkPass != true {
+				conditionsMap["ErrorCheckUser"] = true
 			} else {
-				conditionsMap["SignUpSuccessful"] = true
-			}
+				conditionsMap["ErrorCheckUser"] = false
+				// Create new user
+				var user db.User
+				user.Id = bson.NewObjectId()
+				user.Username = username
+				user.Password = password
+				// Creating new user in db
+				if err := db.CreateUser(user); err != nil {
+					fmt.Println("Error with insert")
+					conditionsMap["SignUpSuccessful"] = false
+					return
+				} else {
+					conditionsMap["SignUpSuccessful"] = true
+				}
 
-			log.Println("Sign in username:", username)
-			log.Println("Sign in password:", password)
+				log.Println("Sign in username:", username)
+				log.Println("Sign in password:", password)
 
-			// Create a new session and redirect to login
-			session, _ := store.New(req, "session")
-			fmt.Println("My username %s" + username)
+				// Create a new session and redirect to login
+				session, _ := store.New(req, "session")
+				fmt.Println("My username %s" + username)
 
-			session.Values["username"] = ""
-			err := session.Save(req, w)
-			if err != nil {
-				log.Println(err)
+				session.Values["username"] = ""
+				err := session.Save(req, w)
+				if err != nil {
+					log.Println(err)
+				}
 			}
 		}
 	}
@@ -194,6 +212,7 @@ func SignUpUser(w http.ResponseWriter, req *http.Request) {
 	}
 }
 
+// Check password for the contents of letters and numbers (from 4 to 16 characters)
 func checkPassword(password string) (b bool) {
 	if ok, _ := regexp.MatchString("^[a-zA-Z0-9]{4,16}$", password); !ok {
 		return false
@@ -201,6 +220,7 @@ func checkPassword(password string) (b bool) {
 	return true
 }
 
+// Check username for the contents of letters and numbers (from 4 to 16 characters)
 func checkUsername(username string) (b bool) {
 	if ok, _ := regexp.MatchString("^[a-zA-Z0-9]{4,16}$", username); !ok {
 		return false
