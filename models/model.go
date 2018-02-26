@@ -29,7 +29,7 @@ func handleError(err error, message string, w http.ResponseWriter) {
 	w.Write([]byte(fmt.Sprintf(message, err)))
 }
 
-// Start page
+// StartPage - start page
 func StartPage(w http.ResponseWriter, req *http.Request) {
 	conditionsMap := map[string]interface{}{}
 	session, err := store.Get(req, "session")
@@ -63,7 +63,7 @@ func StartPage(w http.ResponseWriter, req *http.Request) {
 	}
 }
 
-// User page
+// Dashboard - user page
 func Dashboard(w http.ResponseWriter, req *http.Request) {
 	conditionsMap := map[string]interface{}{}
 	session, _ := store.Get(req, "session")
@@ -82,7 +82,7 @@ func Dashboard(w http.ResponseWriter, req *http.Request) {
 
 }
 
-// Authentication user
+// LoginUser - authentication user
 func LoginUser(w http.ResponseWriter, req *http.Request) {
 	conditionsMap := map[string]interface{}{}
 
@@ -133,7 +133,7 @@ func LoginUser(w http.ResponseWriter, req *http.Request) {
 	}
 }
 
-// Logout user. Remove user. Session => nil
+// LogoutUser. Session => nil
 func LogoutUser(w http.ResponseWriter, req *http.Request) {
 	// Read from session
 	session, _ := store.Get(req, "session")
@@ -148,7 +148,7 @@ func LogoutUser(w http.ResponseWriter, req *http.Request) {
 	http.Redirect(w, req, "/", http.StatusFound)
 }
 
-// User registration
+// SignUpUser - user registration
 func SignUpUser(w http.ResponseWriter, req *http.Request) {
 	conditionsMap := map[string]interface{}{}
 
@@ -212,7 +212,7 @@ func SignUpUser(w http.ResponseWriter, req *http.Request) {
 	}
 }
 
-// Check password for the contents of letters and numbers (from 4 to 16 characters)
+// checkPassword - check password for the contents of letters and numbers (from 4 to 16 characters)
 func checkPassword(password string) (b bool) {
 	if ok, _ := regexp.MatchString("^[a-zA-Z0-9]{4,16}$", password); !ok {
 		return false
@@ -220,7 +220,7 @@ func checkPassword(password string) (b bool) {
 	return true
 }
 
-// Check username for the contents of letters and numbers (from 4 to 16 characters)
+// checkUsername - check username for the contents of letters and numbers (from 4 to 16 characters)
 func checkUsername(username string) (b bool) {
 	if ok, _ := regexp.MatchString("^[a-zA-Z0-9]{4,16}$", username); !ok {
 		return false

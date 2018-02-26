@@ -28,17 +28,17 @@ func init() {
 	fmt.Println("Woow")
 }
 
-// Connection to usersdb collections
+// CollectionUsers - connection to usersdb collections
 func CollectionUsers() *mgo.Collection {
 	return db.C("usersdb")
 }
 
-// Create User
+// CreateUser - create User
 func CreateUser(user User) error {
 	return CollectionUsers().Insert(user)
 }
 
-// Finding user by username and password
+// FindUser - finding user by username and password
 func FindUser(username string, password string) (*User, error) {
 	res := User{}
 	err := CollectionUsers().Find(bson.M{
