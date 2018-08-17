@@ -7,8 +7,8 @@ import (
 	"regexp"
 
 	"github.com/gorilla/sessions"
-	"github.com/user/golang_signup/db"
-	"github.com/user/golang_signup/tmpl"
+	"github.com/user/golang_signup/service/db"
+	"github.com/user/golang_signup/service/tmpl"
 	"gopkg.in/mgo.v2/bson"
 )
 
@@ -29,7 +29,7 @@ func handleError(err error, message string, w http.ResponseWriter) {
 	w.Write([]byte(fmt.Sprintf(message, err)))
 }
 
-// StartPage - start page
+// StartPage start page
 func StartPage(w http.ResponseWriter, req *http.Request) {
 	conditionsMap := map[string]interface{}{}
 	session, err := store.Get(req, "session")
@@ -133,7 +133,7 @@ func LoginUser(w http.ResponseWriter, req *http.Request) {
 	}
 }
 
-// LogoutUser. Session => nil
+// LogoutUser Session => nil
 func LogoutUser(w http.ResponseWriter, req *http.Request) {
 	// Read from session
 	session, _ := store.Get(req, "session")
@@ -173,20 +173,19 @@ func SignUpUser(w http.ResponseWriter, req *http.Request) {
 			// Check for correctness of data entry
 			checkName := checkUsername(username)
 			checkPass := checkPassword(password)
-			if checkName != true || checkPass != true {
+			if !checkName || !checkPass {
 				conditionsMap["ErrorCheckUser"] = true
 			} else {
 				conditionsMap["ErrorCheckUser"] = false
 				// Create new user
 				var user db.User
-				user.Id = bson.NewObjectId()
+				user.ID = bson.NewObjectId()
 				user.Username = username
 				user.Password = password
 				// Creating new user in db
 				if err := db.CreateUser(user); err != nil {
 					fmt.Println("Error with insert")
 					conditionsMap["SignUpSuccessful"] = false
-					return
 				} else {
 					conditionsMap["SignUpSuccessful"] = true
 				}

@@ -1,0 +1,12 @@
+image: golang:1.10.0
+
+pipelines:
+  default:
+    - step:
+        script:
+          - ./scripts/run-lint.sh
+  branches:
+      master:
+        - step:
+            script:
+              - ./scripts/run-lint.sh

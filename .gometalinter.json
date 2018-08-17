@@ -1,0 +1,27 @@
+{
+  "ALL": [
+    "deadcode -> skip",
+    "unconvert -> ???",
+    "vet -> done",
+    "goimports -> done",
+    "vetshadow -> done",
+    "ineffassign -> done",
+    "goconst -> skip",
+    "megacheck -> done",
+    "errcheck -> skip",
+    "golint -> done"
+  ],
+  "Enable": [
+    "vet",
+    "goimports",
+    "vetshadow",
+    "ineffassign",
+    "golint",
+    "megacheck"
+  ],
+  "Exclude": [
+    "func.*is unused"
+  ],
+  "Vendor": true,
+  "Deadline": "60s"
+}

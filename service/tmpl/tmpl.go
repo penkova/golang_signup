@@ -4,7 +4,7 @@ import (
 	"html/template"
 )
 
-const StartPage = `<!DOCTYPE html>
+const startPage = `<!DOCTYPE html>
 	<html>
 		<head>
 			<title>Home Page</title>
@@ -24,7 +24,7 @@ const StartPage = `<!DOCTYPE html>
 		</body>
 	</html>`
 
-const SingUpPage = `<!DOCTYPE html>
+const singUpPage = `<!DOCTYPE html>
 	<html>
 	<head>
 		<title>SIGN IN</title>
@@ -52,7 +52,7 @@ const SingUpPage = `<!DOCTYPE html>
 	</body>
 	</html>`
 
-const LoginPage = `<!DOCTYPE html>
+const loginPage = `<!DOCTYPE html>
 	<html>
 		<body>
 			<div style="display: flex; flex-direction: column; align-items: center" >
@@ -77,7 +77,7 @@ const LoginPage = `<!DOCTYPE html>
 	  </body>
 	</html>`
 
-const DashboardPage = `<!DOCTYPE html>
+const dashboardPage = `<!DOCTYPE html>
 	<html>
 	<head>
 		<meta charset="utf-8">
@@ -100,7 +100,14 @@ const DashboardPage = `<!DOCTYPE html>
 	</body>
 	</html>`
 
-var StartPageTemplate = template.Must(template.New("").Parse(StartPage))
-var SignUpTemplate = template.Must(template.New("").Parse(SingUpPage))
-var LoginUserTemplate = template.Must(template.New("").Parse(LoginPage))
-var DashboardTemplate = template.Must(template.New("").Parse(DashboardPage))
+// StartPageTemplate template
+var StartPageTemplate = template.Must(template.New("").Parse(startPage))
+
+// SignUpTemplate template
+var SignUpTemplate = template.Must(template.New("").Parse(singUpPage))
+
+// LoginUserTemplate template
+var LoginUserTemplate = template.Must(template.New("").Parse(loginPage))
+
+// DashboardTemplate template
+var DashboardTemplate = template.Must(template.New("").Parse(dashboardPage))

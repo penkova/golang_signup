@@ -2,14 +2,15 @@ package db
 
 import (
 	"fmt"
+	"log"
+
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
-	"log"
 )
 
 // User represents database entity.
 type User struct {
-	Id       bson.ObjectId `json:"id" bson:"_id"`
+	ID       bson.ObjectId `json:"id" bson:"_id"`
 	Username string        `json:"username" bson:"username"`
 	Password string        `json:"password" bson:"password"`
 }
